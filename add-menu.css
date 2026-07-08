@@ -1,0 +1,187 @@
+:root {
+    --primary:#14213D;
+    --secondary:#FCA311;
+    --background:#E5E5E5;
+    --card:#FFFFFF;
+    --text:#000000;
+    --muted:#E5E5E5;
+    --border:#aaaaaa;
+    --shadow:#00000033;
+}
+/* DARK MODE */
+.dark {
+    --background:#000000;
+    --card:#14213D;
+    --text:#FFFFFF;
+    --muted:#1F2B4D;
+    --border:#3A4668;
+}
+/* RESET */
+* {
+    box-sizing:border-box;
+    font-family:"Segoe UI",sans-serif;
+}
+body {
+    margin:0;
+    background:var(--background);
+    color:var(--text);
+    transition:.4s;
+}
+/* HEADER */
+header {
+    height:80px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 40px;
+    background:var(--card);
+    box-shadow:0 5px 20px var(--shadow);
+}
+.logo a {
+    font-size:26px;
+    font-weight:700;
+    color:var(--primary);
+    text-decoration:none;
+    transition:.3s;
+}
+.logo a:hover {
+    color:var(--secondary);
+}
+.profile {
+    font-size:18px;
+}
+/* DARK MODE BUTTON */
+#themeBtn {
+    border:none;
+    background:var(--primary);
+    color:var(--card);
+    padding:12px 18px;
+    border-radius:15px;
+    cursor:pointer;
+    transition:.3s;
+}
+#themeBtn:hover {
+    background:var(--secondary);
+    transform:scale(1.05);
+}
+/* MAIN */
+main {
+    padding:40px;
+}
+h1 {
+    text-align:center;
+    color:var(--primary);
+}
+/* DASHBOARD */
+.dashboard {
+    display:grid;
+    grid-template-columns:250px 1fr 250px;
+    gap:25px;
+}
+/* CARDS */
+.card {
+    background:var(--card);
+    padding:25px;
+    border-radius:25px;
+    box-shadow:0 10px 25px var(--shadow);
+    animation:show .5s;
+}
+@keyframes show {
+    from {
+        opacity:0;
+        transform:translateY(20px);
+    }
+    to {
+        opacity:1;
+    }
+}
+/* BUTTONS */
+.card button {
+    width:100%;
+    margin:8px 0;
+    padding:14px;
+    border:none;
+    border-radius:15px;
+    background:var(--muted);
+    color:var(--text);
+    cursor:pointer;
+    font-size:16px;
+    transition:.3s;
+}
+.card button:hover,
+.active {
+    background:var(--secondary)!important;
+    color:#FFFFFF;
+    transform:scale(1.04);
+}
+/* FORMS */
+label {
+    display:block;
+    margin-top:15px;
+    font-weight:600;
+}
+input,
+textarea,
+select {
+    width:100%;
+    padding:13px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    margin-top:5px;
+}
+textarea {
+    height:90px;
+}
+/* ROW */
+.row {
+    display:flex;
+    gap:20px;
+}
+/* ADD BUTTON */
+.add-btn {
+    background:var(--primary)!important;
+    color:#FFFFFF!important;
+    margin-top:25px!important;
+}
+.add-btn:hover {
+    background:var(--secondary)!important;
+}
+/* MENU LIST */
+.menu-list {
+    margin-top:40px;
+    background:var(--card);
+    padding:25px;
+    border-radius:25px;
+}
+/* MENU ITEM */
+.item {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:20px;
+    border-radius:15px;
+    background:var(--muted);
+    margin-top:15px;
+    transition:.3s;
+}
+.item:hover {
+    transform:translateY(-5px);
+    box-shadow:0 8px 15px var(--shadow);
+}
+.item button {
+    width:auto;
+}
+/* RESPONSIVE */
+@media(max-width:900px){
+    .dashboard{
+        grid-template-columns:1fr;
+    }
+    header{
+        padding:0 20px;
+    }
+    main{
+        padding:20px;
+    }
+}
