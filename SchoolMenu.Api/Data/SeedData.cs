@@ -8,69 +8,223 @@ namespace SchoolMenu.Api.Data;
 //  Изпълнява се ВЕДНЪЖ при стартиране (виж Program.cs).
 //  Ако базата вече има данни - не прави нищо.
 //
-//  Искаш други примерни ястия? Промени ги тук, после спри
+//  Искаш други примерни данни? Промени ги тук, после спри
 //  приложението, изтрий файла menu.db и стартирай пак.
 // ============================================================
+
 public static class SeedData
 {
     public static void Run(AppDbContext db)
     {
-        // Ако вече има потребители, базата е пълна -> излизаме
-        if (db.Users.Any()) return;
+        // Ако вече има служители, базата е пълна -> излизаме
+        if (db.Employees.Any()) return;
 
-        // --- 1) Потребители: кухня и ученик ---
-        db.Users.Add(new User
+        // ------------------------------------------------------
+        // 1) Роли
+        // ------------------------------------------------------
+
+        var kitchenRole = new Role
         {
-            Username = "kitchen",
-            // Хешираме паролата с BCrypt - в базата НЕ стои "kitchen123"!
+            Name = "Kitchen"
+        };
+
+        var canteenRole = new Role
+        {
+            Name = "Canteen"
+        };
+
+        db.Roles.AddRange(kitchenRole, canteenRole);
+
+        // ------------------------------------------------------
+        // 2) Служители
+        // ------------------------------------------------------
+
+        var kitchenEmployee = new Employee
+        {
+            FirstName = "School",
+            LastName = "Kitchen",
+            Email = "kitchen@school.bg",
+
+            // В базата НЕ се пази истинската парола.
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("kitchen123"),
-            Role = "kitchen",
-            DisplayName = "Кухня"
-        });
-        db.Users.Add(new User
+
+            Role = kitchenRole
+        };
+
+        var canteenEmployee = new Employee
         {
-            Username = "student",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("student123"),
-            Role = "student",
-            DisplayName = "Ученик"
-        });
+            FirstName = "School",
+            LastName = "Canteen",
+            Email = "canteen@school.bg",
 
-        // --- 2) Примерни ястия (по 3 от всеки вид) ---
-        var bobChorba = new MenuItem { Name = "Боб чорба", Type = "soup", Allergens = "целина" };
-        var pileshkaSupa = new MenuItem { Name = "Пилешка супа", Type = "soup", Allergens = "яйца, глутен" };
-        var tarator = new MenuItem { Name = "Таратор", Type = "soup", Allergens = "мляко" };
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("canteen123"),
 
-        var musaka = new MenuItem { Name = "Мусака", Type = "main", Allergens = "мляко, яйца" };
-        var pileSOriz = new MenuItem { Name = "Пиле с ориз", Type = "main" };
-        var spagetiBologneze = new MenuItem { Name = "Спагети Болонезе", Type = "main", Allergens = "глутен" };
+            Role = canteenRole
+        };
 
-        var kiseloMlyako = new MenuItem { Name = "Кисело мляко с мед", Type = "dessert", Allergens = "мляко" };
-        var yabalkovShtrudel = new MenuItem { Name = "Ябълков щрудел", Type = "dessert", Allergens = "глутен, яйца, мляко" };
-        var biskvitenaTorta = new MenuItem { Name = "Бисквитена торта", Type = "dessert", Allergens = "глутен, мляко" };
+        db.Employees.AddRange(kitchenEmployee, canteenEmployee);
 
-        db.MenuItems.AddRange(
-            bobChorba, pileshkaSupa, tarator,
-            musaka, pileSOriz, spagetiBologneze,
-            kiseloMlyako, yabalkovShtrudel, biskvitenaTorta);
+        // ------------------------------------------------------
+        // 3) Категории
+        // ------------------------------------------------------
 
-        // --- 3) Меню за ДНЕС и УТРЕ (за да видиш нещо още при първия старт) ---
-        // Забележи: подаваме целия ОБЕКТ (Soup = tarator), а EF Core
-        // сам ще попълни SoupId с правилното число в базата.
-        db.DailyMenus.Add(new DailyMenu
+        var soupCategory = new Category
+        {
+            CategoryName = "Супа"
+        };
+
+        var mainCategory = new Category
+        {
+            CategoryName = "Основно"
+        };
+
+        var dessertCategory = new Category
+        {
+            CategoryName = "Десерт"
+        };
+
+        db.Categories.AddRange(
+            soupCategory,
+            mainCategory,
+            dessertCategory);
+
+        // ------------------------------------------------------
+        // 4) Меню за днес
+        // ------------------------------------------------------
+
+        var todayMenu = new Menu
         {
             Date = DateTime.Today,
-            Soup = tarator,
-            MainCourse = pileSOriz,
-            Dessert = yabalkovShtrudel,
+            Day = DateTime.Today.DayOfWeek.ToString(),
+            Category = mainCategory,
+            Employee = kitchenEmployee,
             Notes = "Добре дошли! Това меню е добавено автоматично от Data/SeedData.cs"
-        });
-        db.DailyMenus.Add(new DailyMenu
+        };
+
+        db.Menus.Add(todayMenu);
+
+        // ------------------------------------------------------
+        // 5) Примерни ястия
+        // ------------------------------------------------------
+
+        var bobChorba = new MenuItem
         {
-            Date = DateTime.Today.AddDays(1),
-            Soup = bobChorba,
-            MainCourse = musaka,
-            Dessert = kiseloMlyako
-        });
+            Menu = todayMenu,
+            Category = soupCategory,
+            Name = "Боб чорба",
+            Type = "soup",
+            Description = "Домашна боб чорба",
+            Allergens = "целина",
+            Ingredients = "боб, моркови, лук, домати",
+            Quantity = "350 мл"
+        };
+
+        var pileshkaSupa = new MenuItem
+        {
+            Menu = todayMenu,
+            Category = soupCategory,
+            Name = "Пилешка супа",
+            Type = "soup",
+            Description = "Домашна пилешка супа",
+            Allergens = "яйца, глутен",
+            Ingredients = "пиле, фиде, моркови",
+            Quantity = "350 мл"
+        };
+
+        var tarator = new MenuItem
+        {
+            Menu = todayMenu,
+            Category = soupCategory,
+            Name = "Таратор",
+            Type = "soup",
+            Description = "Студена супа",
+            Allergens = "мляко",
+            Ingredients = "кисело мляко, краставици, копър",
+            Quantity = "300 мл"
+        };
+
+        var musaka = new MenuItem
+        {
+            Menu = todayMenu,
+            Category = mainCategory,
+            Name = "Мусака",
+            Type = "main",
+            Description = "Домашна мусака",
+            Allergens = "мляко, яйца",
+            Ingredients = "картофи, кайма",
+            Quantity = "400 г"
+        };
+
+        var pileSOriz = new MenuItem
+        {
+            Menu = todayMenu,
+            Category = mainCategory,
+            Name = "Пиле с ориз",
+            Type = "main",
+            Description = "Пиле с ориз",
+            Allergens = "",
+            Ingredients = "пилешко месо, ориз",
+            Quantity = "400 г"
+        };
+
+        var spagetiBologneze = new MenuItem
+        {
+            Menu = todayMenu,
+            Category = mainCategory,
+            Name = "Спагети Болонезе",
+            Type = "main",
+            Description = "Спагети с доматен сос",
+            Allergens = "глутен",
+            Ingredients = "спагети, кайма, домати",
+            Quantity = "380 г"
+        };
+
+        var kiseloMlyako = new MenuItem
+        {
+            Menu = todayMenu,
+            Category = dessertCategory,
+            Name = "Кисело мляко с мед",
+            Type = "dessert",
+            Description = "Кисело мляко с мед",
+            Allergens = "мляко",
+            Ingredients = "кисело мляко, мед",
+            Quantity = "200 г"
+        };
+
+        var yabalkovShtrudel = new MenuItem
+        {
+            Menu = todayMenu,
+            Category = dessertCategory,
+            Name = "Ябълков щрудел",
+            Type = "dessert",
+            Description = "Домашен щрудел",
+            Allergens = "глутен, яйца, мляко",
+            Ingredients = "ябълки, кори, масло",
+            Quantity = "180 г"
+        };
+
+        var biskvitenaTorta = new MenuItem
+        {
+            Menu = todayMenu,
+            Category = dessertCategory,
+            Name = "Бисквитена торта",
+            Type = "dessert",
+            Description = "Домашна торта",
+            Allergens = "глутен, мляко",
+            Ingredients = "бисквити, мляко, какао",
+            Quantity = "200 г"
+        };
+
+        db.MenuItems.AddRange(
+            bobChorba,
+            pileshkaSupa,
+            tarator,
+            musaka,
+            pileSOriz,
+            spagetiBologneze,
+            kiseloMlyako,
+            yabalkovShtrudel,
+            biskvitenaTorta);
 
         // Чак този ред записва всичко по-горе във файла menu.db!
         db.SaveChanges();
