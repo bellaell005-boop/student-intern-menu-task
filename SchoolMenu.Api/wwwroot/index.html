@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <!-- viewport = страницата да изглежда добре и на телефон -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Дневно меню</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header>
+    <h1>🍽️ Дневно меню</h1>
+    <a href="login.html">Вход за кухнята</a>
+  </header>
+
+  <main>
+    <!-- Датата се попълва от student.js -->
+    <h2 id="menu-date"></h2>
+
+    <!-- Навигация между дните на седмицата (Задача 2 - готово) -->
+    <div class="day-nav">
+      <button id="btn-monday">Пон</button>
+      <button id="btn-tuesday">Вт</button>
+      <button id="btn-wednesday">Ср</button>
+      <button id="btn-thursday">Чет</button>
+      <button id="btn-friday">Пет</button>
+    </div>
+
+    <!-- Тук student.js "рисува" менюто -->
+    <div id="menu-container">Зареждане...</div>
+  </main>
+
+  <!-- Редът е важен: първо api.js (функциите), после student.js (ползва ги) -->
+  <script src="js/api.js"></script>
+  <script src="js/student.js"></script>
+</body>
+</html>
