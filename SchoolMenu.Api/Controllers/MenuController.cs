@@ -9,117 +9,258 @@ namespace SchoolMenu.Api.Controllers;
 // ============================================================
 //  MenuController - дневното меню.
 //
-//  ГОТОВО (примери, от които да се учиш):
+//  ГОТОВО:
 //    GET  /api/menu?date=2026-07-07   -> менюто за дата
 //    POST /api/menu                   -> ново меню (само кухнята)
 //
-//  ТВОИТЕ ЗАДАЧИ (виж коментарите най-долу):
-//    ЗАДАЧА 3: PUT    /api/menu/{id}  -> редактиране
-//    ЗАДАЧА 4: DELETE /api/menu/{id}  -> изтриване
-//    ЗАДАЧА 5: GET    /api/menu/week  -> меню за 5 работни дни
+//  ДОБАВЕНО:
+//    PUT    /api/menu/{id}             -> редактиране
+//    DELETE /api/menu/{id}             -> изтриване
+//    GET    /api/menu/week             -> меню за 5 работни дни
+//
+//  Менюто вече използва новата структура:
+//
+//  Menu
+//      |
+//      └── MenuItems
+//              |
+//              └── Category
+//
 // ============================================================
+
 [ApiController]
 [Route("api/menu")]
 public class MenuController : ControllerBase
 {
     private readonly AppDbContext _db;
-    public MenuController(AppDbContext db) { _db = db; }
+
+    public MenuController(AppDbContext db)
+    {
+        _db = db;
+    }
+
 
     // --------------------------------------------------------
     //  ЧЕТЕНЕ: GET /api/menu?date=2026-07-07
+    //
     //  "?date=..." от адреса влиза в параметъра date ([FromQuery])
+    //
+    //  .Include() = зарежда свързаните таблици.
+    //  Без него MenuItems и Employee няма да бъдат заредени.
     // --------------------------------------------------------
+
     [HttpGet]
     [AllowAnonymous]
     public async Task<IActionResult> GetByDate([FromQuery] DateTime date)
     {
-        // .Include() = "зареди и свързаните ястия".
-        // Без .Include() menu.Soup ще е null, защото в таблицата
-        // DailyMenus стои само числото SoupId! (виж Models/DailyMenu.cs)
-        var menu = await _db.DailyMenus
-            .Include(m => m.Soup)
-            .Include(m => m.MainCourse)
-            .Include(m => m.Dessert)
-            .FirstOrDefaultAsync(m => m.Date.Date == date.Date);  // сравняваме само датата, без часа
+        var menu = await _db.Menus
+            .Include(m => m.MenuItems)
+            .ThenInclude(i => i.Category)
+            .Include(m => m.Employee)
+            .FirstOrDefaultAsync(m => m.Date.Date == date.Date);
 
-        // Няма меню за тази дата -> 404 + разбираемо съобщение.
-        // Frontend-ът проверява точно за 404 (виж js/api.js).
+
+        // Няма меню за тази дата -> 404
         if (menu == null)
-            return NotFound(new { message = "Менюто за тази дата все още не е въведено." });
+            return NotFound(new
+            {
+                message = "Менюто за тази дата все още не е въведено."
+            });
+
 
         return Ok(menu);
     }
 
+
+
     // --------------------------------------------------------
     //  ЗАПИС: POST /api/menu  (само кухнята!)
     //
-    //  Браузърът изпраща JSON (виж js/api.js -> postMenu):
+    //  Браузърът изпраща JSON:
+    //
     //  {
-    //    "date": "2026-07-08",
-    //    "soupId": 2, "mainCourseId": 5, "dessertId": 8,
-    //    "notes": "Вегетариански ден"
+    //      "employeeId":1,
+    //      "day":"Monday",
+    //      "date":"2026-07-08",
+    //      "categoryId":1,
+    //      "notes":"Вегетарианско меню"
     //  }
+    //
     // --------------------------------------------------------
+
     [HttpPost]
-    [Authorize(Roles = "kitchen")]
-    public async Task<IActionResult> Create([FromBody] DailyMenu menu)
+    [Authorize(Roles = "Kitchen")]
+    public async Task<IActionResult> Create([FromBody] Menu menu)
     {
-        // ВАЛИДАЦИЯ: за една дата - само едно меню
-        bool exists = await _db.DailyMenus.AnyAsync(m => m.Date.Date == menu.Date.Date);
+
+        // ВАЛИДАЦИЯ:
+        // За една дата може да има само едно меню.
+
+        bool exists = await _db.Menus
+            .AnyAsync(m => m.Date.Date == menu.Date.Date);
+
+
         if (exists)
-            return BadRequest(new { message = "Вече има меню за тази дата. Използвай редактиране." });
+            return BadRequest(new
+            {
+                message = "Вече има меню за тази дата. Използвай редактиране."
+            });
 
-        _db.DailyMenus.Add(menu);        // 1) в "чакалнята"
-        await _db.SaveChangesAsync();    // 2) реалният запис в menu.db
 
-        return Created($"/api/menu/{menu.Id}", menu);
+
+        if (menu.EmployeeId <= 0)
+            return BadRequest(new
+            {
+                message = "Не е избран служител."
+            });
+
+
+
+        _db.Menus.Add(menu);
+
+        await _db.SaveChangesAsync();
+
+
+
+        return Created($"/api/menu/{menu.MenuId}", menu);
     }
 
-    // ═══════════════════════════════════════════════════════
-    //  ЗАДАЧА 3: РЕДАКТИРАНЕ - PUT /api/menu/{id}
-    //
-    //  Стъпки:
-    //   1. Направи метод с [HttpPut("{id}")] и [Authorize(Roles = "kitchen")]:
-    //        public async Task<IActionResult> Update(int id, [FromBody] DailyMenu updated)
-    //      ({id} от адреса влиза в параметъра id автоматично)
-    //   2. Намери менюто в базата:
-    //        var menu = await _db.DailyMenus.FindAsync(id);
-    //   3. Ако е null -> return NotFound(new { message = "Няма такова меню" });
-    //   4. Прехвърли новите стойности върху намереното меню:
-    //        menu.SoupId       = updated.SoupId;
-    //        menu.MainCourseId = updated.MainCourseId;
-    //        menu.DessertId    = updated.DessertId;
-    //        menu.Notes        = updated.Notes;
-    //   5. await _db.SaveChangesAsync();   // EF прави UPDATE в базата
-    //   6. return Ok(menu);
-    //
-    //  Тествай в Swagger, преди да правиш бутон в admin панела!
-    // ═══════════════════════════════════════════════════════
+
+
 
     // ═══════════════════════════════════════════════════════
-    //  ЗАДАЧА 4: ИЗТРИВАНЕ - DELETE /api/menu/{id}
+    //  РЕДАКТИРАНЕ: PUT /api/menu/{id}
     //
-    //  Стъпки:
-    //   1. [HttpDelete("{id}")] + [Authorize(Roles = "kitchen")]
-    //   2. Намери менюто с FindAsync(id); ако е null -> NotFound
-    //   3. _db.DailyMenus.Remove(menu);
-    //   4. await _db.SaveChangesAsync();   // EF прави DELETE
-    //   5. return Ok(new { message = "Менюто е изтрито" });
+    //  Позволява на кухнята да промени меню.
+    //
+    //  Пример:
+    //
+    //  PUT /api/menu/3
+    //
     // ═══════════════════════════════════════════════════════
 
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Kitchen")]
+    public async Task<IActionResult> Update(
+        int id,
+        [FromBody] Menu updated)
+    {
+
+        var menu = await _db.Menus.FindAsync(id);
+
+
+        if (menu == null)
+            return NotFound(new
+            {
+                message = "Няма такова меню."
+            });
+
+
+
+        menu.EmployeeId = updated.EmployeeId;
+        menu.Day = updated.Day;
+        menu.Date = updated.Date;
+        menu.CategoryId = updated.CategoryId;
+        menu.Notes = updated.Notes;
+
+
+
+        await _db.SaveChangesAsync();
+
+
+
+        return Ok(menu);
+    }
+
+
+
+
     // ═══════════════════════════════════════════════════════
-    //  ЗАДАЧА 5: СЕДМИЧНО МЕНЮ - GET /api/menu/week?from=2026-07-06
+    //  ИЗТРИВАНЕ: DELETE /api/menu/{id}
     //
-    //  Подсказки:
-    //   1. [HttpGet("week")] + [AllowAnonymous]
-    //        public async Task<IActionResult> GetWeek([FromQuery] DateTime from)
-    //   2. var to = from.AddDays(5);
-    //   3. Вземи всички менюта в периода:
-    //        await _db.DailyMenus
-    //            .Include(...)  // трите Include-а, като в GetByDate
-    //            .Where(m => m.Date >= from && m.Date < to)
-    //            .OrderBy(m => m.Date)
-    //            .ToListAsync();
-    //   4. return Ok(списъка);
+    //  Изтрива меню и всички ястия към него.
+    //
+    //  Първо махаме MenuItems, защото те зависят от Menu.
+    //
     // ═══════════════════════════════════════════════════════
+
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Kitchen")]
+    public async Task<IActionResult> Delete(int id)
+    {
+
+        var menu = await _db.Menus
+            .Include(m => m.MenuItems)
+            .FirstOrDefaultAsync(m => m.MenuId == id);
+
+
+
+        if (menu == null)
+            return NotFound(new
+            {
+                message = "Менюто не е намерено."
+            });
+
+
+
+        // Изтриваме всички ястия към менюто
+        _db.MenuItems.RemoveRange(menu.MenuItems);
+
+
+
+        // Изтриваме самото меню
+        _db.Menus.Remove(menu);
+
+
+
+        await _db.SaveChangesAsync();
+
+
+
+        return Ok(new
+        {
+            message = "Менюто е изтрито успешно."
+        });
+    }
+
+
+
+
+    // ═══════════════════════════════════════════════════════
+    //  СЕДМИЧНО МЕНЮ:
+    //
+    //  GET /api/menu/week?from=2026-07-06
+    //
+    //  Връща менюта за 5 работни дни.
+    //
+    // ═══════════════════════════════════════════════════════
+
+
+    [HttpGet("week")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetWeek(
+        [FromQuery] DateTime from)
+    {
+
+
+        var to = from.AddDays(5);
+
+
+
+        var menus = await _db.Menus
+            .Include(m => m.MenuItems)
+            .ThenInclude(i => i.Category)
+            .Include(m => m.Employee)
+            .Where(m =>
+                m.Date >= from &&
+                m.Date < to)
+            .OrderBy(m => m.Date)
+            .ToListAsync();
+
+
+
+        return Ok(menus);
+    }
 }
