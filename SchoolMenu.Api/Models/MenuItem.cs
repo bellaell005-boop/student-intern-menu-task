@@ -42,4 +42,7 @@ public class MenuItem
 
     //Грамаж - задължително
     public string Weight { get; set; } = "";
+
+    //Цена - задължително
+//public string Price { get; set; } = "";
 }
