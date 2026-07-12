@@ -1,0 +1,901 @@
+/* ============================================================
+   KUHNYA PAGE STYLE
+   ============================================================ */
+
+
+/* ================= VARIABLES ================= */
+
+
+:root {
+    --primary: #b8860b;
+    --primary-dark: #8b6508;
+    --background: #f7f3eb;
+    --surface: #ffffff;
+    --text: #2b2b2b;
+    --text-light: #666;
+    --border: #ddd;
+    --shadow: 0 15px 35px rgba(0,0,0,0.08);
+    --radius: 18px;
+}
+
+
+
+
+
+body.dark {
+    --background: #171717;
+    --surface: #242424;
+    --text: #f3f3f3;
+    --text-light: #bdbdbd;
+    --border: #444;
+}
+
+
+
+
+
+
+/* ================= PAGE ================= */
+
+
+
+.kitchen-page {
+    min-height: calc(100vh - 250px);
+    padding: 50px 7%;
+    background: var(--background);
+    color: var(--text);
+    transition: background .3s ease, color .3s ease;
+}
+
+
+
+
+
+
+/* ================= WELCOME ================= */
+
+
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+
+
+    .welcome-section h1 {
+        font-family: "Cormorant Garamond", serif;
+        font-size: 48px;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+
+
+
+    .welcome-section span {
+        color: var(--primary);
+    }
+
+
+
+    .welcome-section p {
+        color: var(--text-light);
+        font-size: 18px;
+    }
+
+
+
+
+
+
+
+
+
+/* ================= CONTROLS ================= */
+
+
+
+.menu-controls {
+    display: flex;
+    justify-content: space-between;
+    gap: 40px;
+    background: var(--surface);
+    padding: 35px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 50px;
+}
+
+
+
+
+    .menu-controls h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+
+
+
+
+.day-selector,
+.category-selector {
+    flex: 1;
+}
+
+
+
+
+
+.days {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+
+
+
+
+.day-btn {
+    border: none;
+    padding: 12px 20px;
+    border-radius: 30px;
+    cursor: pointer;
+    background: #eee;
+    color: #333;
+    font-weight: 700;
+    transition: .3s;
+}
+
+
+
+
+
+body.dark .day-btn {
+    background: #333;
+    color: white;
+}
+
+
+
+
+
+
+.day-btn:hover {
+    transform: translateY(-3px);
+}
+
+
+
+
+
+.day-btn.active {
+    background: var(--primary);
+    color: white;
+}
+
+
+
+
+
+
+
+
+
+/* ================= SELECT ================= */
+
+
+
+.category-selector select {
+    width: 100%;
+    padding: 14px 18px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 16px;
+}
+
+
+.add-category-btn {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: 1px dashed var(--primary);
+    background: transparent;
+    color: var(--primary-dark);
+    font-weight: 700;
+    font-size: 13.5px;
+    cursor: pointer;
+    transition: .2s;
+}
+
+body.dark .add-category-btn {
+    color: var(--primary);
+}
+
+.add-category-btn:hover {
+    background: rgba(184,134,11,0.12);
+}
+
+
+
+
+
+
+
+
+
+
+/* ================= FOOD SECTION ================= */
+
+
+
+.food-section {
+    background: var(--surface);
+    padding: 40px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+
+
+
+.category-title {
+    margin-bottom: 30px;
+}
+
+
+
+    .category-title h2 {
+        font-size: 30px;
+    }
+
+
+
+
+
+#categoryName {
+    color: var(--primary);
+}
+
+
+
+
+
+
+
+
+
+
+
+/* ================= FORM ================= */
+
+
+
+.food-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+
+
+
+.form-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+
+
+
+    .form-column label {
+        font-weight: 700;
+        margin-top: 10px;
+    }
+
+
+
+
+
+input,
+textarea {
+    width: 100%;
+    padding: 15px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--text);
+    font-size: 15px;
+    transition: .3s;
+}
+
+
+
+
+textarea {
+    height: 130px;
+    resize: none;
+}
+
+
+
+
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(184,134,11,.15);
+    }
+
+
+
+
+
+
+
+
+
+/* ================= ALLERGENS ================= */
+
+
+
+.allergens {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 10px;
+}
+
+
+
+
+    .allergens label {
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+        background: var(--background);
+        padding: 10px 14px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 13.5px;
+        line-height: 1.35;
+        font-weight: 400;
+        border: 1px solid transparent;
+        transition: .2s;
+    }
+
+        .allergens label:hover {
+            border-color: var(--primary);
+        }
+
+        .allergens label:has(input:checked) {
+            background: rgba(184,134,11,0.15);
+            border-color: var(--primary);
+            font-weight: 700;
+        }
+
+
+
+
+
+    .allergens input {
+        width: auto;
+        margin-top: 2px;
+        flex: none;
+        accent-color: var(--primary);
+    }
+
+
+
+
+
+
+
+
+
+
+
+/* ================= BUTTON ================= */
+
+
+
+.add-btn {
+    margin-top: 30px;
+    padding: 16px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    background: linear-gradient( 135deg, var(--primary), #d4af37 );
+    color: white;
+    font-size: 18px;
+    font-weight: 700;
+    transition: .3s;
+}
+
+
+
+
+
+    .add-btn:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(184,134,11,.35);
+    }
+
+
+
+
+
+
+
+
+
+
+
+/* ================= FOOD LIST (карти с ястия) ================= */
+
+
+.food-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+
+
+.food-card {
+    background: var(--background);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: .3s;
+}
+
+
+
+    .food-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+
+
+.food-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+
+
+    .food-card-head h3 {
+        font-size: 19px;
+    }
+
+
+
+.food-card .tag {
+    background: var(--primary);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+
+
+.food-card p {
+    font-size: 14px;
+    color: var(--text-light);
+    margin: 0;
+}
+
+
+
+.food-card .allergen-line {
+    font-size: 13px;
+    color: var(--primary-dark);
+}
+
+
+
+.food-card-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 4px;
+}
+
+
+
+.food-card-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+
+
+    .food-card-actions button {
+        flex: 1;
+        border: none;
+        padding: 10px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 13px;
+        transition: .3s;
+    }
+
+
+
+.edit-btn {
+    background: rgba(184,134,11,0.15);
+    color: var(--primary-dark);
+}
+
+
+
+    .edit-btn:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+
+
+.delete-btn {
+    background: rgba(200,50,50,0.12);
+    color: #c0392b;
+}
+
+
+
+    .delete-btn:hover {
+        background: #c0392b;
+        color: white;
+    }
+
+
+
+
+
+/* ================= ITEMS LIST (admin.html -> <ul id="items-list">) ================= */
+
+
+ul#items-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 40px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+}
+
+
+
+    ul#items-list li {
+        background: var(--background);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 22px;
+        transition: .3s;
+    }
+
+
+
+        ul#items-list li:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+
+
+
+    ul#items-list .item-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+
+
+        ul#items-list .item-actions button {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            transition: .3s;
+        }
+
+
+
+
+
+/* ================= SIMPLE STACK FORM (menu-form) ================= */
+
+
+.stack-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+
+.subheading {
+    margin: 30px 0 20px;
+    font-size: 20px;
+    color: var(--text);
+}
+
+
+
+
+
+/* ================= EMPTY / NO-MENU STATE ================= */
+
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+    background: var(--background);
+    border: 1px dashed var(--border);
+    border-radius: 14px;
+    margin-bottom: 40px;
+}
+
+
+
+    .empty-state p {
+        margin-bottom: 16px;
+        font-size: 16px;
+    }
+
+
+
+    .empty-state .add-btn {
+        display: inline-block;
+        width: auto;
+        padding: 14px 26px;
+        margin-top: 0;
+    }
+
+
+
+
+
+/* ================= ANIMATION ================= */
+
+
+
+.food-section,
+.menu-controls {
+    animation: fadeUp .7s ease;
+}
+
+
+
+
+@keyframes fadeUp {
+
+
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+
+
+
+
+
+
+
+/* ================= RESPONSIVE ================= */
+
+
+
+@media(max-width:900px) {
+
+
+
+    .menu-controls {
+        flex-direction: column;
+    }
+
+
+
+    .food-form {
+        grid-template-columns: 1fr;
+    }
+
+
+
+    .welcome-section h1 {
+        font-size: 38px;
+    }
+}
+
+
+
+
+
+
+@media(max-width:600px) {
+
+
+
+    .kitchen-page {
+        padding: 30px 20px;
+    }
+
+
+
+    .food-section,
+    .menu-controls {
+        padding: 25px;
+    }
+
+
+
+
+    .days {
+        flex-direction: column;
+    }
+
+
+
+    .day-btn {
+        width: 100%;
+    }
+}
+
+.site-footer {
+    position: relative;
+    background: var(--navy);
+    color: var(--grey);
+    padding-top: 56px;
+}
+
+.footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 32px 40px;
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+@media (max-width:800px) {
+    .footer-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .footer-image {
+        justify-self: center;
+    }
+
+    .footer-links {
+        align-items: center;
+    }
+
+    .rail {
+        display: none;
+    }
+}
+
+.footer-about h3 {
+    color: var(--white);
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.footer-about p {
+    font-size: 14px;
+    line-height: 1.65;
+    color: rgba(229,229,229,0.75);
+    max-width: 320px;
+    margin: 0;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding-top: 6px;
+}
+
+    .footer-links a {
+        font-size: 14.5px;
+        font-weight: 600;
+        color: var(--grey);
+        position: relative;
+        width: fit-content;
+        transition: color .3s ease;
+    }
+
+@media (max-width:800px) {
+    .footer-links a {
+        width: auto;
+    }
+}
+
+.footer-links a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0;
+    height: 1px;
+    background: var(--gold);
+    transition: width .3s ease;
+}
+
+.footer-links a:hover {
+    color: var(--gold);
+}
+
+    .footer-links a:hover::after {
+        width: 100%;
+    }
+
+.footer-image {
+    display: flex;
+    justify-content: center;
+}
+
+.footer-illustration {
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 220/150;
+    color: var(--gold);
+    border-radius: 6px;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(252,163,17,0.2);
+    text-align: center;
+    padding: 18px 20px;
+}
+
+    .footer-bottom p {
+        margin: 0;
+        font-size: 12.5px;
+        color: rgba(229,229,229,0.6);
+        letter-spacing: .02em;
+    }
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
