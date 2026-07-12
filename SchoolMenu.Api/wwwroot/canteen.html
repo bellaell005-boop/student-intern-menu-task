@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Продажби — Лафка | Дневно меню</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Lato:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/canteen.css">
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <span class="logo-mark"><img src="https://chicvibe40.wordpress.com/wp-content/uploads/2026/07/logo.png" alt="Лого на Дневно меню"></span>
+                <span class="logo-text">Дневно меню</span>
+            </a>
+
+            <div class="header-actions">
+                <div class="user-status">
+                    <button type="button" id="logoutBtn" class="btn-link btn-logout">
+                        <svg viewBox="0 0 24 24" class="btn-icon" aria-hidden="true"><path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M16 16l4-4-4-4M20 12H9" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                        Изход
+                    </button>
+                    <span class="user-greeting">Вход като <strong id="userEmail">&hellip;</strong></span>
+                </div>
+
+                <button class="theme-toggle" id="themeToggle" type="button" aria-label="Смяна на тема" aria-pressed="false">
+                    <span class="toggle-track">
+                        <span class="toggle-thumb">
+                            <svg class="icon icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" /><g stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="12" y1="1.5" x2="12" y2="4.2" /><line x1="12" y1="19.8" x2="12" y2="22.5" /><line x1="1.5" y1="12" x2="4.2" y2="12" /><line x1="19.8" y1="12" x2="22.5" y2="12" /><line x1="4.4" y1="4.4" x2="6.3" y2="6.3" /><line x1="17.7" y1="17.7" x2="19.6" y2="19.6" /><line x1="4.4" y1="19.6" x2="6.3" y2="17.7" /><line x1="17.7" y1="6.3" x2="19.6" y2="4.4" /></g></svg>
+                            <svg class="icon icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.8 6.8 0 0 0 10.5 10.5Z" /></svg>
+                        </span>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="site-main canteen-main">
+        <span class="rail rail-left" aria-hidden="true"></span>
+        <span class="rail rail-right" aria-hidden="true"></span>
+
+        <section class="canteen-topbar">
+            <p class="eyebrow">Лафка · Наличности на витрината</p>
+            <h1>Продажби за деня</h1>
+            <p class="canteen-sub" id="selectedDateLabel">Зареждане на менюто&hellip;</p>
+        </section>
+
+        <nav class="day-tabs" id="dayTabs" aria-label="Избор на ден"></nav>
+
+        <div class="canteen-toolbar">
+            <div class="search-box">
+                <svg viewBox="0 0 24 24" class="search-icon" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="1.8" /><line x1="21" y1="21" x2="16.4" y2="16.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" /></svg>
+                <input type="search" id="searchInput" placeholder="Търсене на продукт&hellip;" autocomplete="off">
+            </div>
+            <button type="button" id="refreshBtn" class="btn-refresh" title="Обнови наличностите">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.6M20 5v6h-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </button>
+        </div>
+
+        <div id="statusMsg" class="status-msg" role="status" hidden></div>
+
+        <div id="categoriesContainer" class="categories-container"></div>
+
+        <div id="emptyState" class="empty-state" hidden>
+            <span class="empty-icon">🍽️</span>
+            <h3>Няма въведено меню за този ден</h3>
+            <p>Изберете друга дата или изчакайте кухнята да добави ястия.</p>
+        </div>
+    </main>
+
+    <div class="sell-bar" id="sellBar">
+        <div class="sell-summary">
+            <span class="sell-count"><span id="sellCount">0</span> избрани</span>
+            <span class="sell-divider">·</span>
+            <span class="sell-units"><span id="sellUnits">0</span> бр.</span>
+        </div>
+        <div class="sell-actions">
+            <button type="button" id="clearBtn" class="btn-clear">Изчисти</button>
+            <button type="button" id="sellBtn" class="btn-sell" disabled>Извърши продажба</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast" role="alert" aria-live="assertive"></div>
+
+    <footer class="site-footer">
+        <span class="rail rail-left" aria-hidden="true"></span>
+        <span class="rail rail-right" aria-hidden="true"></span>
+
+        <div class="footer-inner">
+            <div class="footer-col footer-about">
+                <span class="logo-mark small"><img src="https://chicvibe40.wordpress.com/wp-content/uploads/2026/07/logo.png" alt="Лого на Дневно меню"></span>
+                <h3>Дневно меню</h3>
+                <p>Училищната система за управление на менюто, разработена за  лесен и удобен достъп до информация за храната за ученици и персонал.</p>
+            </div>
+
+            <nav class="footer-col footer-links" aria-label="Страници">
+                <a href="menu.html">Меню за седмицата</a>
+                <a href="login-kitchen.html">  Вход · Кухня</a>
+                <a href="login-canteen.html">  Вход · Лафка</a>
+            </nav>
+
+            <div class="footer-col footer-image">
+                <svg viewBox="0 0 220 150" class="footer-illustration" aria-hidden="true">
+                    <rect x="1" y="1" width="218" height="148" rx="4" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.5" />
+                    <circle cx="110" cy="66" r="34" fill="none" stroke="currentColor" stroke-width="1.4" />
+                    <circle cx="110" cy="66" r="22" fill="none" stroke="currentColor" stroke-width="1" />
+                    <line x1="60" y1="40" x2="60" y2="95" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                    <line x1="55" y1="40" x2="55" y2="60" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                    <line x1="65" y1="40" x2="65" y2="60" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                    <path d="M160 40c6 0 8 8 8 16s-2 14-8 18v21" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© <span id="year"></span> Дневно меню. Всички права запазени.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/canteen.js"></script>
+
+</body>
+</html>

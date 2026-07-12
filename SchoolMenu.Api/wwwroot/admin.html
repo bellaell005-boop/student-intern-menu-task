@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="bg">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Кухня | Админ панел</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <!-- Header/Footer styles (същите като на кухненската страница) -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Стилове за кухненската страница -->
+    <link rel="stylesheet" href="css/kitchen.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="site-header">
+
+        <div class="header-inner">
+
+            <a href="index.html" class="logo">
+
+                <span class="logo-mark">
+                    <img src="https://chicvibe40.wordpress.com/wp-content/uploads/2026/07/logo.png"
+                         alt="Лого на Дневно меню">
+                </span>
+
+                <span class="logo-text">
+                    Дневно меню
+                </span>
+
+            </a>
+
+
+            <div class="header-actions">
+
+                <!-- Потребителското име се попълва от admin.js -> guard() -->
+                <nav class="login-links">
+
+                    <button id="btn-logout"
+                            class="btn-link btn-kitchen is-active"
+                            type="button">
+
+                        🚪 Изход
+
+                    </button>
+
+                </nav>
+
+
+                <!-- DARK MODE -->
+
+                <button class="theme-toggle"
+                        id="themeToggle"
+                        type="button"
+                        aria-label="Смяна на тема">
+
+                    <span class="toggle-track">
+
+                        <span class="toggle-thumb">
+
+                            <svg class="icon icon-sun" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="4" />
+                            </svg>
+
+                            <svg class="icon icon-moon" viewBox="0 0 24 24">
+                                <path d="
+                            M20 14.5
+                            A8.5 8.5 0 1 1
+                            9.5 4
+                            A6.8 6.8 0 0 0
+                            20 14.5Z" />
+                            </svg>
+
+                        </span>
+
+                    </span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+
+
+    <!-- ================= MAIN ================= -->
+
+    <main class="kitchen-page">
+
+
+        <!-- USER -->
+
+        <section class="welcome-section">
+
+            <h1>
+                👩‍🍳 Кухня — админ панел
+                <br>
+                <span id="who"></span>
+            </h1>
+
+            <p>
+                Управление на дневното меню и ястията
+            </p>
+
+        </section>
+
+
+
+        <!-- ====================================================
+             СЕКЦИЯ 1: Дневно меню - създава се ПЪРВО, за да имаш
+             ID, към което да добавяш ястия в секция 2.
+             ==================================================== -->
+
+        <section class="menu-controls panel">
+
+            <div class="day-selector" style="flex:1;">
+
+                <h2>Дневно меню</h2>
+
+                <form id="menu-form" class="stack-form">
+
+                    <label for="menu-date-input">Дата</label>
+                    <input id="menu-date-input" type="date" required>
+
+                    <label for="menu-notes">Бележки</label>
+                    <textarea id="menu-notes" rows="2"
+                              placeholder="Бележки (по желание), напр. Вегетарианско меню"></textarea>
+
+                    <button type="submit" class="add-btn">Публикувай меню</button>
+
+                </form>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ====================================================
+             СЕКЦИЯ 2: Ястия
+             ==================================================== -->
+
+        <section class="food-section panel">
+
+            <div class="category-title">
+                <h2>Ястия</h2>
+            </div>
+
+            <!-- Списъкът се пълни от admin.js -> loadItems() -->
+            <ul id="items-list" class="food-list"></ul>
+
+            <h3 class="subheading">Добави ново ястие</h3>
+
+            <form id="item-form" class="food-form">
+
+                <div class="form-column">
+
+                    <label for="item-menu">ID на меню (виж по-горе)</label>
+                    <input id="item-menu" type="number" min="1"
+                           placeholder="ID на меню (виж по-горе)" required>
+
+                    <label for="item-category">Категория</label>
+                    <select id="item-category" required>
+                        <!-- Опциите се пълнят от admin.js -> loadCategories() -->
+                    </select>
+
+                    <label for="item-name">Име</label>
+                    <input id="item-name" placeholder="Напр. Леща чорба" required>
+
+                    <label for="item-type">Вид ястие</label>
+                    <select id="item-type">
+                        <option value="soup">🍲 Супа</option>
+                        <option value="main">🍛 Основно</option>
+                        <option value="salad">🥗 Салата</option>
+                        <option value="dessert">🍰 Десерт</option>
+                        <option value="drink">🥤 Напитка</option>
+                    </select>
+
+                    <label for="item-price">Цена (лв.)</label>
+                    <input id="item-price" type="number" step="0.01" min="0.01"
+                           placeholder="0.00" required>
+
+                </div>
+
+
+                <div class="form-column">
+
+                    <label for="item-description">Описание</label>
+                    <input id="item-description" placeholder="Описание (по желание)">
+
+                    <label for="item-allergens">Алергени</label>
+                    <input id="item-allergens" placeholder="Напр. глутен, мляко (по желание)">
+
+                    <label for="item-ingredients">Съставки</label>
+                    <input id="item-ingredients" placeholder="Съставки (по желание)">
+
+                    <label for="item-quantity">Брой/обем</label>
+                    <input id="item-quantity" placeholder="Напр. 350 мл">
+
+                    <label for="item-weight">Грамаж</label>
+                    <input id="item-weight" placeholder="Напр. 400 г">
+
+                    <button type="submit" class="add-btn">Добави ястие</button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+    </main>
+
+
+
+
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
+        <span class="rail rail-left" aria-hidden="true"></span>
+        <span class="rail rail-right" aria-hidden="true"></span>
+
+        <div class="footer-inner">
+            <div class="footer-col footer-about">
+                <span class="logo-mark small"><img src="https://chicvibe40.wordpress.com/wp-content/uploads/2026/07/logo.png" alt="Лого на Дневно меню"></span>
+                <h3>Дневно меню</h3>
+                <p>Училищната система за управление на менюто, разработена за  лесен и удобен достъп до информация за храната за ученици и персонал.</p>
+            </div>
+
+            <nav class="footer-col footer-links" aria-label="Страници">
+                <a href="menu.html">Меню за седмицата</a>
+                <a href="login-kitchen.html">  Вход · Кухня</a>
+                <a href="login-canteen.html">  Вход · Лафка</a>
+            </nav>
+
+            <div class="footer-col footer-image">
+                <svg viewBox="0 0 220 150" class="footer-illustration" aria-hidden="true">
+                    <rect x="1" y="1" width="218" height="148" rx="4" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.5" />
+                    <circle cx="110" cy="66" r="34" fill="none" stroke="currentColor" stroke-width="1.4" />
+                    <circle cx="110" cy="66" r="22" fill="none" stroke="currentColor" stroke-width="1" />
+                    <line x1="60" y1="40" x2="60" y2="95" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                    <line x1="55" y1="40" x2="55" y2="60" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                    <line x1="65" y1="40" x2="65" y2="60" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                    <path d="M160 40c6 0 8 8 8 16s-2 14-8 18v21" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© <span id="year"></span> Дневно меню. Всички права запазени.</p>
+        </div>
+    </footer>
+
+
+    <script src="js/api.js"></script>
+    <script src="js/admin.js"></script>
+
+    <!-- Тема (тъмен режим) + година във футъра -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+
+            const yearEl = document.getElementById("year");
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+            if (localStorage.getItem("theme") === "dark") {
+                document.body.classList.add("dark");
+            }
+
+            const themeBtn = document.getElementById("themeToggle");
+            if (themeBtn) {
+                themeBtn.addEventListener("click", () => {
+                    document.body.classList.toggle("dark");
+                    localStorage.setItem(
+                        "theme",
+                        document.body.classList.contains("dark") ? "dark" : "light"
+                    );
+                });
+            }
+
+        });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="bg">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Кухня | Дневно меню</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+
+    <!-- Header/Footer styles -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- Kitchen page styles -->
+    <link rel="stylesheet" href="css/kitchen.css">
+
+</head>
+
+
+<body>
+
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="site-header">
+
+        <div class="header-inner">
+
+
+            <a href="index.html" class="logo">
+
+                <span class="logo-mark">
+                    <img src="https://chicvibe40.wordpress.com/wp-content/uploads/2026/07/logo.png"
+                         alt="Лого на Дневно меню">
+                </span>
+
+                <span class="logo-text">
+                    Дневно меню
+                </span>
+
+            </a>
+
+
+
+            <div class="header-actions">
+
+                <!--
+                    Тази страница е защитена (само роля "Kitchen").
+                    Затова тук вече няма линкове за вход,
+                    а бутон за изход, генериран от kuhnya.js -> setupLogout().
+                -->
+                <nav class="login-links">
+
+                    <button id="btn-logout"
+                            class="btn-link btn-kitchen is-active"
+                            type="button">
+
+                        🚪 Изход
+
+                    </button>
+
+                </nav>
+
+
+
+                <!-- DARK MODE -->
+
+                <button class="theme-toggle"
+                        id="themeToggle"
+                        type="button"
+                        aria-label="Смяна на тема">
+
+
+                    <span class="toggle-track">
+
+                        <span class="toggle-thumb">
+
+
+                            <svg class="icon icon-sun"
+                                 viewBox="0 0 24 24">
+
+                                <circle cx="12"
+                                        cy="12"
+                                        r="4" />
+
+                            </svg>
+
+
+
+                            <svg class="icon icon-moon"
+                                 viewBox="0 0 24 24">
+
+                                <path d="
+                            M20 14.5
+                            A8.5 8.5 0 1 1
+                            9.5 4
+                            A6.8 6.8 0 0 0
+                            20 14.5Z" />
+
+                            </svg>
+
+
+                        </span>
+
+                    </span>
+
+
+                </button>
+
+
+            </div>
+
+
+
+        </div>
+
+
+    </header>
+
+
+
+
+
+    <!-- ================= MAIN ================= -->
+
+
+    <main class="kitchen-page">
+
+
+        <!-- USER -->
+
+        <section class="welcome-section">
+
+
+            <h1>
+                Добре дошъл,
+                <span id="currentUser">
+                    Потребител
+                </span>
+            </h1>
+
+
+            <p>
+                Управление на дневното меню
+            </p>
+
+
+        </section>
+
+
+
+
+
+        <!-- FILTERS -->
+
+        <section class="menu-controls">
+
+
+            <!-- DAYS -->
+
+            <div class="day-selector">
+
+
+                <h2>
+                    Избери ден
+                </h2>
+
+
+                <div class="days">
+
+
+                    <button class="day-btn active">
+                        Понеделник
+                    </button>
+
+
+                    <button class="day-btn">
+                        Вторник
+                    </button>
+
+
+                    <button class="day-btn">
+                        Сряда
+                    </button>
+
+
+                    <button class="day-btn">
+                        Четвъртък
+                    </button>
+
+
+                    <button class="day-btn">
+                        Петък
+                    </button>
+
+
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <!-- CATEGORY -->
+            <!--
+                Опциите вече се зареждат динамично от базата
+                (getCategories() в api.js), затова тук е празно.
+            -->
+
+
+            <div class="category-selector">
+
+
+                <h2>
+                    Тип хранене
+                </h2>
+
+
+
+                <select id="foodCategory">
+
+                    <option value="">Зареждане...</option>
+
+                </select>
+
+                <button type="button" id="addCategoryBtn" class="add-category-btn" title="Нова категория">
+                    + Нова категория
+                </button>
+
+
+
+            </div>
+
+
+        </section>
+
+
+
+
+
+
+
+        <!-- FOOD LIST -->
+
+
+        <section class="food-section">
+
+
+            <div class="category-title">
+
+
+                <h2>
+
+                    <span id="categoryName">
+                        Категория
+                    </span>
+
+
+                    (
+
+                    <span id="itemCount">
+                        0
+                    </span>
+
+                    елемента)
+
+                </h2>
+
+
+            </div>
+
+
+
+            <!-- Тук kuhnya.js рендва .food-list с картите за ястия,
+                 или съобщение, ако няма меню / няма ястия -->
+            <!-- ADD / EDIT FOOD FORM -->
+
+
+            <form class="food-form"
+                  id="foodForm">
+
+
+
+                <div class="form-column">
+
+
+
+                    <label>
+                        Име на ястието
+                    </label>
+
+
+                    <input type="text"
+                           id="foodName"
+                           placeholder="Например: Баница"
+                           required>
+
+
+
+                    <label>
+                        Съставки
+                    </label>
+
+
+                    <textarea id="ingredients"
+                              placeholder="Въведете съставките">
+                </textarea>
+
+
+
+
+
+                    <label>
+                        Количество
+                    </label>
+
+
+                    <input type="text"
+                           id="quantity"
+                           placeholder="Например: 100 порции">
+
+
+
+                </div>
+
+
+
+
+
+
+
+
+
+                <div class="form-column">
+
+
+
+                    <label>
+                        Алергени
+                    </label>
+
+
+                    <div class="allergens">
+
+
+                        <label title="Пшеница, ръж, ечемик, овес и производни">
+                            <input type="checkbox" value="Зърнени култури, съдържащи глутен">
+                            1. Зърнени култури, съдържащи глутен
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Ракообразни и продукти от тях">
+                            2. Ракообразни и продукти от тях
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Яйца и продукти от тях">
+                            3. Яйца и продукти от тях
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Риба и рибни продукти">
+                            4. Риба и рибни продукти
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Фъстъци и продукти от тях">
+                            5. Фъстъци и продукти от тях
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Соя и соеви продукти">
+                            6. Соя и соеви продукти
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Мляко и млечни продукти">
+                            7. Мляко и млечни продукти
+                        </label>
+
+                        <label title="Бадеми, орехи, макадамия, лешници, кашу, бразилски орех, орехи куинсленд">
+                            <input type="checkbox" value="Ядки">
+                            8. Ядки
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Целина и продукти от нея">
+                            9. Целина и продукти от нея
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Синап и продукти от него">
+                            10. Синап и продукти от него
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Сусамово семе и продукти от него">
+                            11. Сусамово семе и продукти от него
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Лупина и продукти от нея">
+                            12. Лупина и продукти от нея
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Серен диоксид и сулфиди">
+                            13. Серен диоксид и сулфиди
+                        </label>
+
+                        <label>
+                            <input type="checkbox" value="Мекотели и продукти от тях">
+                            14. Мекотели и продукти от тях
+                        </label>
+
+
+                    </div>
+
+
+
+
+
+
+                    <label>
+                        Цена (€)
+                    </label>
+
+
+                    <input type="number"
+                           id="price"
+                           step="0.01"
+                           placeholder="0.00 €">
+
+
+
+
+
+                    <label>
+                        Грамаж
+                    </label>
+
+
+                    <input type="number"
+                           id="weight"
+                           placeholder="грама">
+
+
+
+
+
+                    <button type="submit"
+                            class="add-btn">
+
+                        + Добави
+
+                    </button>
+
+
+
+                </div>
+
+
+
+            </form>
+
+
+
+        </section>
+
+
+
+    </main>
+
+
+
+
+
+
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="site-footer">
+        <span class="rail rail-left" aria-hidden="true"></span>
+        <span class="rail rail-right" aria-hidden="true"></span>
+
+        <div class="footer-inner">
+            <div class="footer-col footer-about">
+                <span class="logo-mark small"><img src="https://chicvibe40.wordpress.com/wp-content/uploads/2026/07/logo.png" alt="Лого на Дневно меню"></span>
+                <h3>Дневно меню</h3>
+                <p>Училищната система за управление на менюто, разработена за  лесен и удобен достъп до информация за храната за ученици и персонал.</p>
+            </div>
+
+            <nav class="footer-col footer-links" aria-label="Страници">
+                <a href="ucenici.html">Меню за седмицата</a>
+                <a href="kuhnya-login.html">  Вход · Кухня</a>
+                <a href="lafka-login.html">  Вход · Лафка</a>
+            </nav>
+
+            <div class="footer-col footer-image">
+                <svg viewBox="0 0 220 150" class="footer-illustration" aria-hidden="true">
+                    <rect x="1" y="1" width="218" height="148" rx="4" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.5" />
+                    <circle cx="110" cy="66" r="34" fill="none" stroke="currentColor" stroke-width="1.4" />
+                    <circle cx="110" cy="66" r="22" fill="none" stroke="currentColor" stroke-width="1" />
+                    <line x1="60" y1="40" x2="60" y2="95" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                    <line x1="55" y1="40" x2="55" y2="60" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                    <line x1="65" y1="40" x2="65" y2="60" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                    <path d="M160 40c6 0 8 8 8 16s-2 14-8 18v21" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                </svg>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© <span id="year"></span> Дневно меню. Всички права запазени.</p>
+        </div>
+    </footer>
+
+    <!-- api.js съдържа ВСИЧКИ реални заявки към сървъра -->
+    <script src="js/api.js"></script>
+
+    <!-- kuhnya.js използва api.js и логиката от admin.js,
+         адаптирана към елементите на тази страница -->
+    <script src="js/kitchen.js"></script>
+
+
+</body>
+
+</html>
